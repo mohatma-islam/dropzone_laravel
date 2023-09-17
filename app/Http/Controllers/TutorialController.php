@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class TutorialController extends Controller
 {   
@@ -13,18 +15,14 @@ class TutorialController extends Controller
     
     public function uploads(Request $request)
     {
-        // dd($request);
-        // $path = storage_path('tmp/uploads');
-
-        // !file_exists($path) && mkdir($path, 0777, true);
-
-        // $params = $request->params;
-
         $id = $request->input('id');
 
         $file = $request->file('file');
-        $name = $id . '_' . trim($file->getClientOriginalName());
-        // $file->move($path, $name);
+        // $name = $id . '_' . trim($file->getClientOriginalName());
+        $name = trim($file->getClientOriginalName());
+
+
+        Storage::disk('local')->put('temp/imageUpload/' . $name, File::get($file));
 
         return response()->json([
             'name'          => $name,
